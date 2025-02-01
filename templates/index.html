@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .response {
+            background: #f4f4f4;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ask a Question</h1>
+        <input type="text" id="userQuery" placeholder="Type your question here...">
+        <button onclick="askQuestion()">Ask</button>
+        <div class="response" id="response"></div>
+    </div>
+    
+    <script>
+        function askQuestion() {
+            const query = document.getElementById("userQuery").value.trim();
+
+            if (!query) {
+                document.getElementById("response").innerText = "Please type a question.";
+                return;
+            }
+
+            fetch("/ask", {  // Ensure this is the correct URL for your server
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = data.response;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("response").innerText = "An error occurred. Please try again.";
+            });
+        }
+    </script>
+</body>
+</html>
